@@ -15,7 +15,7 @@
 
 CC = gcc
 CFLAGS = -pthread -march=native -O3 -mno-avx -D_XOPEN_SOURCE=600 -D_GNU_SOURCE -std=c99 \
-         -W -Wall -Werror
+         -W -Wall -Werror -DCLOCK_SRC=CLOCK_TAI
 LDFLAGS = -lrt -lpthread
 
 TARGETS = timectxsw timectxswws timesyscall timegettime timetctxsw timetctxsw2

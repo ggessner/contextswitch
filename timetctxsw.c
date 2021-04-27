@@ -26,12 +26,16 @@
 
 #include <linux/futex.h>
 
+#ifndef CLOCK_SRC
+#define CLOCK_SRC CLOCK_MONOTONIC
+#endif
+
 static inline long long unsigned time_ns(struct timespec* const ts) {
-  if (clock_gettime(CLOCK_MONOTONIC, ts)) {
-    exit(1);
-  }
-  return ((long long unsigned) ts->tv_sec) * 1000000000LLU
-    + (long long unsigned) ts->tv_nsec;
+    if (clock_gettime(CLOCK_SRC, ts)) {
+        exit(1);
+    }
+    return ((long long unsigned) ts->tv_sec) * 1000000000LLU
+           + (long long unsigned) ts->tv_nsec;
 }
 
 static const int iterations = 500000;

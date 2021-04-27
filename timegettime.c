@@ -16,12 +16,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/syscall.h>
 #include <time.h>
-#include <unistd.h>
 
-static inline long long unsigned time_ns(struct timespec *const ts) {
-    if (clock_gettime(CLOCK_MONOTONIC, ts)) {
+#ifndef CLOCK_SRC
+#define CLOCK_SRC CLOCK_MONOTONIC
+#endif
+
+static inline long long unsigned time_ns(struct timespec* const ts) {
+    if (clock_gettime(CLOCK_SRC, ts)) {
         exit(1);
     }
     return ((long long unsigned) ts->tv_sec) * 1000000000LLU
@@ -33,11 +35,12 @@ int main(void) {
     struct timespec ts;
     const long long unsigned start_ns = time_ns(&ts);
     for (int i = 0; i < iterations; i++) {
-        if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0) {
+        if (clock_gettime(CLOCK_SRC, &ts) < 0) {
             exit(2);
         }
     }
     const long long unsigned delta = time_ns(&ts) - start_ns;
+    printf("using CLOCK: %u\n", CLOCK_SRC);
     printf("%i clock gettime in %lluns (%.1fns/call)\n",
            iterations, delta, (delta / (float) iterations));
     return 0;
