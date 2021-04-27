@@ -20,7 +20,7 @@
 #include <unistd.h>
 
 static inline long long unsigned time_ns(struct timespec* const ts) {
-  if (clock_gettime(CLOCK_REALTIME, ts)) {
+  if (clock_gettime(CLOCK_MONOTONIC, ts)) {
     exit(1);
   }
   return ((long long unsigned) ts->tv_sec) * 1000000000LLU
